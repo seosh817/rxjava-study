@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+   <Button
+       android:text="EDITTEXT+DEBOUNCE"
+       android:id="@+id/btn_debounce"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       />
+    <Button
+        android:text="OnClickListener + throttle"
+        android:id="@+id/btn_throttle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <Button
+        android:text="Back key finish + buffer"
+        android:id="@+id/btn_buffer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <Button
+        android:text="Validation check + combineLatest"
+        android:id="@+id/btn_combineLatest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <Button
+        android:text="RxBus + BehaviorSubject"
+        android:id="@+id/btn_behaviorSubject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+</LinearLayout>
