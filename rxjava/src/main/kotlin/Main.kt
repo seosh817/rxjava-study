@@ -77,7 +77,7 @@ fun main() {
     */
 
 
-    //2주차
+    //Chap2
 
     //val source = object: Observable
 
@@ -170,7 +170,7 @@ fun main() {
 
 
 
-/*    //3주차
+/*    //Chap3
 
     Observable.create<String> { emitter ->
         //Hello 전달
@@ -239,7 +239,9 @@ fun main() {
     Thread.sleep(3000)
     //1초마다 전달하고 3초일때 중지
     //initail delay를 주면 delay만큼 더 쉬고 전달 (그냥 하면 처음부터 1초쉬고 데이터전달 1초쉬고 데이터 전달)
-    //첫 데이터를 안쉬고 데이터를 배출하려면 .startWith(0)을 추가해주면 됨*/
+    //첫 데이터를 안쉬고 데이터를 배출하려면 .startWith(0)을 추가해주면 됨
+    //당연한거지만 이거 안주면 기다리지 않고 끝나버림 (안하면 Main()이 죽으니까 프로그램이 죽음)
+    */
 
 /*    Observable.range(3, 2)
         .subscribe { println(it) }
@@ -248,7 +250,7 @@ fun main() {
 /*    //TIMER
     Observable.timer(2000L, TimeUnit.MILLISECONDS)
         .subscribe { println("2초 후")}
-    Thread.sleep(3000L) // 이거 안주면 기다리지 않고 끝나버림 (얼마나 기다리게 할건지 주는것)*/
+    Thread.sleep(3000L)*/
 
 
     //TransformationOperator
@@ -399,7 +401,7 @@ fun main() {
     observable.subscribe { println(it) }*/
 
 
-    //4주차
+    //Chap4
 
 /*    //debounceON
     Observable.interval(250L, TimeUnit.MILLISECONDS)
