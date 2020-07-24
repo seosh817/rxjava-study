@@ -326,8 +326,6 @@ fun main() {
         .scan { t1: Int, t2: Int -> t1 + t2}
         .subscribe { println(it)}*/
 
-    //복습 하는법 -> ppt만 보고 연습
-
 
 /*    Observable.create<Int> {emitter ->
 
