@@ -550,6 +550,18 @@ fun main() {
     println(LocalTime.now())
 
 
+    // subject와 observable의 가장 큰 차이점
+    // subject는 Observer의 기능 (onNext(), onComplete()...의 기능)과 Observable의 기능(zip, combineLatest 등등..)
+    // 모두 할 수 있지만 observable은 이름 그 자체로 Observable의 기능만 할 수 있다.
+    val subject = BehaviorSubject.create<Int>()
+    val observable = Observable.just(1)
+
+
+
+
+
+
+
 }
 
 class CustomObserver<T>(
