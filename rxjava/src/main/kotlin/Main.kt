@@ -129,14 +129,14 @@ fun main() {
     //onSubscribe
 
 
- /*   val publishSubject = PublishSubject.create<Int>()
-    publishSubject.subscribe { println("1번째 Observer -> $it") }
-    publishSubject.onNext(1)
-    publishSubject.subscribe { println("2번째 Obsevrer -> $it") }
-    publishSubject.onNext(2)
-    publishSubject.onNext(3)
-    publishSubject.subscribe { println("3번째 Observer -> $it") }
-    publishSubject.onNext(4)*/
+    /*   val publishSubject = PublishSubject.create<Int>()
+       publishSubject.subscribe { println("1번째 Observer -> $it") }
+       publishSubject.onNext(1)
+       publishSubject.subscribe { println("2번째 Obsevrer -> $it") }
+       publishSubject.onNext(2)
+       publishSubject.onNext(3)
+       publishSubject.subscribe { println("3번째 Observer -> $it") }
+       publishSubject.onNext(4)*/
 
 /*    val behaviorSubject = BehaviorSubject.create<Int>()
     behaviorSubject.subscribe { println("1번째 Observer -> $it") }
@@ -167,7 +167,6 @@ fun main() {
     asyncSubject.onNext(4)
     asyncSubject.onComplete()
 */
-
 
 
 /*    //Chap3
@@ -261,7 +260,6 @@ fun main() {
     //2를 없애고 3, 4 배출 5를 없개 6, 7 ...*/
 
     //flatMap
-
 
 
 /*    Observable.fromIterable(0..2)
@@ -432,8 +430,6 @@ fun main() {
             .subscribe { println("complete") }*/
 
 
-
-
 /*    //throttleFirst
     println(System.currentTimeMillis())
     Observable.interval(0, 100, TimeUnit.MILLISECONDS)
@@ -544,7 +540,7 @@ fun main() {
     val list = arrayListOf<String>()
 
     println(LocalTime.now())
-    for(i in 0..470000) {
+    for (i in 0..470000) {
         list.add("aa")
     }
     println(LocalTime.now())
@@ -556,10 +552,31 @@ fun main() {
     val subject = BehaviorSubject.create<Int>()
     val observable = Observable.just(1)
 
+    var disposable: Disposable? = null
+    disposable = Observable.just(1, 2, 3)
+        .doOnSubscribe {
+            println("doOnSubscribe")
+        }
+        .doOnDispose { // dispose()
+            println("doOnDispose")
+        }
+        .doOnTerminate { // onComplete(), onError()
+            println("doOnTerminate")
+        }
+        .doAfterTerminate {
+            println("doAfterTerminate")
+        }
+        .doFinally { // onComplete(), onError(), dispose()
+            println("doFinally")
+            disposable = null // Because disposable means ConnectingState. so if called onComplete(), dispose(), onError(), disconnecting Observable
+        }
+        .subscribe({
 
+        }, {
 
+        }, {
 
-
+        })
 
 
 }
