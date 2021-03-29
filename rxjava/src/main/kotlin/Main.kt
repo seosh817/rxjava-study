@@ -568,7 +568,7 @@ fun main() {
         }
         .doFinally { // onComplete(), onError(), dispose()
             println("doFinally")
-            disposable = null // Because disposable means ConnectingState. so if called onComplete(), dispose(), onError(), disconnecting Observable
+            disposable = null // Because disposable means connectionstate. so if called onComplete(), dispose(), onError(), need to be disconnected
         }
         .subscribe({
 
