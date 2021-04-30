@@ -64,7 +64,7 @@
       </method>
     </configuration>
     <configuration name="MainKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <module name="rxjava.main" />
+      <module name="rxjava" />
       <option name="VM_PARAMETERS" />
       <option name="PROGRAM_PARAMETERS" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -76,6 +76,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.MainKt" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="ServiceViewManager">
     <option name="viewStates">
@@ -102,6 +107,18 @@
       <updated>1586071735396</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="233" y="0" key="#Project_Structure" timestamp="1588680590247">

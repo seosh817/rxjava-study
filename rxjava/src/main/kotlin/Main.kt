@@ -537,46 +537,54 @@ fun main() {
 
     Thread.sleep(4000)*/
 
-    val list = arrayListOf<String>()
-
-    println(LocalTime.now())
-    for (i in 0..470000) {
-        list.add("aa")
-    }
-    println(LocalTime.now())
-
-
-    // subject와 observable의 가장 큰 차이점
-    // subject는 Observer의 기능 (onNext(), onComplete()...의 기능)과 Observable의 기능(zip, combineLatest 등등..)
-    // 모두 할 수 있지만 observable은 이름 그 자체로 Observable의 기능만 할 수 있다.
-    val subject = BehaviorSubject.create<Int>()
-    val observable = Observable.just(1)
-
-    var disposable: Disposable? = null
-    disposable = Observable.just(1, 2, 3)
-        .doOnSubscribe {
-            println("doOnSubscribe")
+//    val list = arrayListOf<String>()
+//
+//    println(LocalTime.now())
+//    for (i in 0..470000) {
+//        list.add("aa")
+//    }
+//    println(LocalTime.now())
+//
+//
+//    // subject와 observable의 가장 큰 차이점
+//    // subject는 Observer의 기능 (onNext(), onComplete()...의 기능)과 Observable의 기능(zip, combineLatest 등등..)
+//    // 모두 할 수 있지만 observable은 이름 그 자체로 Observable의 기능만 할 수 있다.
+//    val subject = BehaviorSubject.create<Int>()
+//    val observable = Observable.just(1)
+//
+//    var disposable: Disposable? = null
+//    disposable = Observable.just(1, 2, 3)
+//        .doOnSubscribe {
+//            println("doOnSubscribe")
+//        }
+//        .doOnDispose { // dispose()
+//            println("doOnDispose")
+//        }
+//        .doOnTerminate { // onComplete(), onError()
+//            println("doOnTerminate")
+//        }
+//        .doAfterTerminate {
+//            println("doAfterTerminate")
+//        }
+//        .doFinally { // onComplete(), onError(), dispose()
+//            println("doFinally")
+//            disposable = null // Because disposable means connectionstate. so if called onComplete(), dispose(), onError(), need to be disconnected
+//        }
+//        .subscribe({
+//
+//        }, {
+//
+//        }, {
+//
+//        })
+    
+/*
+    Observable.intervalRange(0L, 30L, 0, 1L,TimeUnit.SECONDS)
+        .subscribe {
+            println("${Thread.currentThread().name} $it")
         }
-        .doOnDispose { // dispose()
-            println("doOnDispose")
-        }
-        .doOnTerminate { // onComplete(), onError()
-            println("doOnTerminate")
-        }
-        .doAfterTerminate {
-            println("doAfterTerminate")
-        }
-        .doFinally { // onComplete(), onError(), dispose()
-            println("doFinally")
-            disposable = null // Because disposable means connectionstate. so if called onComplete(), dispose(), onError(), need to be disconnected
-        }
-        .subscribe({
-
-        }, {
-
-        }, {
-
-        })
+    Thread.sleep(30000L)
+*/
 
 
 }
