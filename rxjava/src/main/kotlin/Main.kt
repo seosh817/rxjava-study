@@ -1,23 +1,14 @@
-import io.reactivex.*
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Observer
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
-import io.reactivex.internal.util.HalfSerializer.onNext
-import io.reactivex.rxkotlin.Flowables
-import io.reactivex.rxkotlin.zipWith
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.AsyncSubject
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.ReplaySubject
-import java.io.IOException
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
+import org.reactivestreams.Publisher
+import org.reactivestreams.Subscriber
+import org.reactivestreams.Subscription
 import java.util.concurrent.TimeUnit
-import javax.swing.text.DateFormatter
-import kotlin.random.Random
 
 fun main() {
 
@@ -577,7 +568,7 @@ fun main() {
 //        }, {
 //
 //        })
-    
+
 /*
     Observable.intervalRange(0L, 30L, 0, 1L,TimeUnit.SECONDS)
         .subscribe {
@@ -585,6 +576,23 @@ fun main() {
         }
     Thread.sleep(30000L)
 */
+
+    Single.error<Throwable>(IllegalArgumentException())
+        .doOnError {
+            println("error")
+        }
+//        .retryWhen(RetryWithDelaySingle(5, 500))
+        .retryWhen {
+            it
+                .delay(500, TimeUnit.MILLISECONDS)
+                .take(5)
+        }
+        .subscribe({
+            println("onSuccess()")
+        }, {
+            println("onError()")
+        })
+    Thread.sleep(5000L)
 
 
 }
