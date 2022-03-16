@@ -577,7 +577,7 @@ fun main() {
     Thread.sleep(30000L)
 */
 
-    Single.error<Throwable>(IllegalArgumentException())
+/*    Single.error<Throwable>(IllegalArgumentException())
         .doOnError {
             println("error")
         }
@@ -592,8 +592,22 @@ fun main() {
         }, {
             println("onError()")
         })
-    Thread.sleep(5000L)
+    Thread.sleep(5000L)*/
 
+//    Flowable.just(1, 2, 3 ,4)
+//        .subscribe()
+
+
+    Observable.range(1, 9)
+        .flatMapSingle {
+            Single.just("Single Success + $it")
+        }
+        .subscribe({
+            println(it)
+        }, {
+
+        })
+    Thread.sleep(5000L)
 
 }
 
