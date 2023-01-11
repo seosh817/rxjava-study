@@ -595,17 +595,141 @@ fun main() {
 //        .subscribe()
 
 
-    Observable.range(1, 9)
-        .flatMapSingle {
-            Single.just("Single Success + $it")
+//    Observable.range(1, 9)
+//        .flatMapSingle {
+//            Single.just("Single Success + $it")
+//        }
+//        .subscribe({
+//            println(it)
+//        }, {
+//
+//        })
+/*
+    Single.just(1)
+        .flatMap {
+            Single.fromCallable {
+                "$it flatMapSingle1 + "
+            }
         }
+        .flatMap {
+            Single.fromCallable {
+                "$it flatMapSingle2"
+            }
+        }
+        .ignoreElement()
+        .andThen(Single.just("Next Stream"))
         .subscribe({
             println(it)
         }, {
 
-        })
-    Thread.sleep(5000L)
+        })*/
 
+
+//    Thread.sleep(5000L)
+//    Observable.just(listOf(1, 2, 3, 4, 5, 6, 7, 8, 9))
+//        .flatMap { Observable.fromIterable(it) }
+//        .flatMapSingle {
+//            Single.just("$it: flatMapSingle1 +")
+//        }
+//        .flatMapSingle {
+//            Single.fromCallable {
+//                "$it flatMapSingle2 +"
+//            }
+//        }
+//        .flatMapSingle {
+//            Single.fromCallable {
+//                "$it flatMapSingle3"
+//            }
+//        }
+//        .doOnNext {
+//            println(it)
+//        }
+//        .flatMapCompletable {
+//            Completable.create { emitter ->
+//                if(it.length >= 2) {
+//                    emitter.onComplete()
+//                }
+//                emitter.onError(IllegalArgumentException(""))
+//            }
+//            Completable.complete()
+//        }
+////        .ignoreElements()
+//        .doOnComplete {
+//            println("onCompleted")
+//        }
+//        .andThen(Single.just("New Stream"))
+//        .subscribe({
+//            println(it)
+//        }, {
+//
+//        })
+
+
+//    val observable1 = Observable.timer(3000L, TimeUnit.MILLISECONDS)
+//        .doOnSubscribe {
+//            println("observable1 subscribe: ${TimeUtil.fromMills(System.currentTimeMillis())}")
+//        }
+//        .doOnComplete {
+//            println("observable1 completed: ${TimeUtil.fromMills(System.currentTimeMillis())}")
+//        }
+//    val observable2 = Observable.timer(2000L, TimeUnit.MILLISECONDS)
+//        .doOnSubscribe {
+//            println("observable2 subscribe: ${TimeUtil.fromMills(System.currentTimeMillis())}")
+//        }
+//        .doOnComplete {
+//            println("observable2 completed: ${TimeUtil.fromMills(System.currentTimeMillis())}")
+//        }
+//
+//    val observable3 = Observable.timer(1000L, TimeUnit.MILLISECONDS)
+//        .doOnSubscribe {
+//            println("observable3 subscribe: ${TimeUtil.fromMills(System.currentTimeMillis())}")
+//        }
+//        .doOnComplete {
+//            println("observable3 completed: ${TimeUtil.fromMills(System.currentTimeMillis())}")
+//        }
+//
+//    Observable.concat(observable1, observable2, observable3)
+//        .subscribe({
+//        }, {
+//
+//        })
+//    Thread.sleep(7000L)
+
+
+    Single.just(listOf(1, 2, 3, 4, 5, 6))
+        .flatMapCompletable { list ->
+            Single.concat(
+                list.map {
+                    uploadS3Completable(it)
+                })
+                .flatMapCompletable {
+                    Completable.fromCallable {
+                        println("flatMapCompletable $it")
+                    }
+                }
+        }
+        .subscribe({
+            println("success")
+        }, {
+
+        })
+    Thread.sleep(7000L)
+
+}
+
+fun uploadS3Completable(num: Int): Single<Int> {
+    return Single
+        .create { emitter ->
+            println("num: $num")
+            emitter.onSuccess(num)
+        }
+}
+
+fun makeCompletable(): Completable {
+    return Completable.create {
+        println("completed")
+        it.onComplete()
+    }
 }
 
 class CustomObserver<T>(
