@@ -1,3 +1,4 @@
+import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
@@ -5,6 +6,8 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.BiFunction
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 
 fun main() {
@@ -696,25 +699,147 @@ fun main() {
 //    Thread.sleep(7000L)
 
 
-    Single.just(listOf(1, 2, 3, 4, 5, 6))
-        .flatMapCompletable { list ->
-            Single.concat(
-                list.map {
-                    uploadS3Completable(it)
-                })
-                .flatMapCompletable {
-                    Completable.fromCallable {
-                        println("flatMapCompletable $it")
-                    }
-                }
+//    Single.just(listOf(1, 2, 3, 4, 5, 6))
+//        .flatMapCompletable { list ->
+//            Single.concat(
+//                list.map {
+//                    uploadS3Completable(it)
+//                })
+//                .flatMapCompletable {
+//                    Completable.fromCallable {
+//                        println("flatMapCompletable $it")
+//                    }
+//                }
+//        }
+//        .subscribe({
+//            println("success")
+//        }, {
+//
+//        })
+//    Thread.sleep(7000L)
+/*
+    // 잘못된 예시. Observable이 interval 마다 생성이 되므로 나중에는 엄청 많이 생성이 됨.
+    // 결과
+    // protocol 1
+    // protocol 2
+    // protocol 2
+    // protocol 3
+    // protocol 3
+    // protocol 3
+    // protocol 4
+    // protocol 4
+    // protocol 4
+    // protocol 4
+    // protocol 5
+    // protocol 5
+    // protocol 5
+    // protocol 5
+    // protocol 5
+    // protocol 6
+    // protocol 6
+    // protocol 6
+    // protocol 6
+    // protocol 6
+    // protocol 6
+    val protocolRelay = PublishRelay.create<String>()
+
+    Observable.interval(1000L,  TimeUnit.MILLISECONDS)
+        .doOnNext {
+            protocolRelay.accept("protocol $it")
+        }
+        .flatMap {
+            protocolRelay
         }
         .subscribe({
-            println("success")
+            println("$it")
         }, {
 
         })
-    Thread.sleep(7000L)
 
+    Thread.sleep(7000L)
+*/
+
+
+    // Observable은 단 1개만 생성이 되고, subject에 데이터를 흘려보내줘서 정상적으로 동작함.
+    // protocol 0
+    // protocol 1
+    // protocol 2
+    // protocol 3
+    // protocol 4
+    // protocol 5
+    subjectWithIntervalObservable()
+        .subscribe({
+            println("$it")
+        }, {
+            println("protocol error $it")
+        })
+
+    Thread.sleep(7000L)
+}
+
+// Subject 혹은 Observable이 주기적으로(예륻들면, Observable.interval 등) 데이터를 방출시키게 하는 방법.
+fun subjectWithIntervalObservable(): Observable<String> {
+    var intervalDisposable: Disposable? = null
+    val dataSubject = PublishSubject.create<String>()
+    return dataSubject
+        .doOnSubscribe {
+            intervalDisposable = Observable.interval(1000L, TimeUnit.MILLISECONDS)
+                .doFinally {
+                    if (!dataSubject.hasThrowable()) {
+                        dataSubject.onComplete()
+                    }
+                }
+                .subscribe({
+                    dataSubject.onNext("protocol $it")
+                }, {
+                    dataSubject.onError(it)
+                })
+        }
+        .doFinally {
+            intervalDisposable?.dispose()
+        }
+        .subscribeOn(Schedulers.computation())
+}
+
+// doOnSubscribe와 doFinally에서 dataSubject와 생명주기를 맞춰준다.
+fun getPostureStream(): Observable<Pair<Long,Long>> {
+    val dataSubject = PublishSubject.create<Pair<Long,Long>>()
+    var dataDisposable: Disposable? = null
+    var timerDisposable: Disposable? = null
+    return dataSubject
+        .doOnSubscribe {
+            dataDisposable = Observable
+                .combineLatest<Long, Long, Pair<Long, Long>>(
+                    Observable.interval(1L, TimeUnit.SECONDS),
+                    Observable.interval(2L, TimeUnit.SECONDS),
+                     { t1, t2 ->
+                        t1 to t2
+                    })
+                .doFinally {
+                    if (!dataSubject.hasThrowable()) {
+                        dataSubject.onComplete()
+                    }
+                }
+                .subscribe({
+                    dataSubject.onNext(it)
+                }, {
+                    println("onError :$it")
+                    dataSubject.onError(it)
+                })
+            timerDisposable = Completable
+                .timer(1000L, TimeUnit.SECONDS)
+                .doFinally {
+                    if (dataDisposable?.isDisposed == false) {
+                        dataDisposable?.dispose()
+                    }
+                }
+                .subscribe()
+        }
+        .doFinally {
+            dataDisposable?.dispose()
+            timerDisposable?.dispose()
+        }
+        .subscribeOn(Schedulers.computation())
 }
 
 fun uploadS3Completable(num: Int): Single<Int> {
