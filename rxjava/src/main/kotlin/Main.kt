@@ -1,4 +1,3 @@
-import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
@@ -21,16 +20,19 @@ fun main() {
     eventSource.notify("Observer Pattern")*//*
 
 */
+/*
 
-/*    Observable.create<String> { emitter ->
+    Observable.create<String> { emitter ->
         // Hello 전달
         emitter.onNext("Hello")
         // World 전달
         emitter.onNext("World")
         // 완료
         emitter.onComplete()
-    }.subscribe { println(it) }*/
+    }.subscribe { println(it) }
 
+    Thread.sleep(2000L)
+*/
 
 /*    Observable
         .fromIterable(0..5)
@@ -182,8 +184,21 @@ fun main() {
     observable1.subscribe { println(it) }
     observable1.subscribe { println(it) }*/
 
-/*    val observable = Observable.create<LocalTime> {emitter ->
-        emitter.onNext(LocalTime.now())
+
+    /*var name = "seunghwan"
+
+    val justObservable = Observable.just(name)
+
+    val deferObservable = Observable.defer { Observable.just(name) }
+
+    name = "seosh817"
+
+    justObservable.subscribe {
+        println("justObservable name: $it")
+    }
+
+    deferObservable.subscribe {
+        println("deferObservable name: $it")
     }*/
 
 
@@ -209,20 +224,24 @@ fun main() {
     Observable.fromArray(*items)
         .subscribe { println(it) }*/
 
-/*    //fromCallable
-    println("start: ${System.currentTimeMillis()}")
-    fun createItem(): String {
-        println("create: ${System.currentTimeMillis()}")
-        return "HelloWorld"
+
+    var name = "seunghwan"
+
+    val justObservable = Observable.just(name)
+
+    val fromCallableObservable = Observable.fromCallable { name }
+
+    name = "seosh817"
+
+    justObservable.subscribe {
+        println("justObservable name: $it")
     }
 
-    val observable = Observable.fromCallable { createItem() }
+    fromCallableObservable.subscribe {
+        println("fromCallableObservable name: $it")
+    }
 
     Thread.sleep(1000)
-    observable.subscribe { println(it) }
-
-    Thread.sleep(1000)
-    observable.subscribe { println(it) }*/
 
 /*    Observable.interval(1000, TimeUnit.MILLISECONDS)
         .subscribe { println(it) }
@@ -390,12 +409,14 @@ fun main() {
 
     //Chap4
 
-/*    //debounceON
-    Observable.interval(250L, TimeUnit.MILLISECONDS)
+/*
+    // debounce 예시
+    Observable.intervalRange(0L, 6, 0, 250L,  TimeUnit.MILLISECONDS)
         .debounce(300L, TimeUnit.MILLISECONDS)
         .subscribe(::println)
 
-    Thread.sleep(1500)*/
+    Thread.sleep(1500)
+*/
 
 /*    //distinct
     Observable.just(1, 1, 2, 1, 2, 3)
@@ -419,33 +440,30 @@ fun main() {
 /*        Observable.just(1, 1, 2, 1, 2, 3)
             .ignoreElements()
             .subscribe { println("complete") }*/
-
-
-/*    //throttleFirst
-    println(System.currentTimeMillis())
+/*
+    // throttleFirst
     Observable.interval(0, 100, TimeUnit.MILLISECONDS)
-        .throttleFirst(250, TimeUnit.MILLISECONDS)
+        .throttleFirst(500, TimeUnit.MILLISECONDS)
         .subscribe {
-            println(System.currentTimeMillis())
             println(it)
         }
     Thread.sleep(1000)*/
 
-/*    //throttleLast
-    println(System.currentTimeMillis())
-    Observable.interval(0, 100, TimeUnit.MILLISECONDS) //initialDelay 시작부터 시작
-        .throttleLast(250, TimeUnit.MILLISECONDS)
+/*    // throttleLast 예시
+    Observable.interval(0, 100, TimeUnit.MILLISECONDS)
+        .throttleLast(500, TimeUnit.MILLISECONDS)
         .subscribe {
-            println(System.currentTimeMillis())
             println(it)
         }
     Thread.sleep(1000)*/
 
-
-/*    //skip, skiplast
+/*
+    //skip, skiplast
     Observable.just(1, 1, 2, 1, 2, 3)
-        .skipLast(2)
-        .subscribe { println(it) }*/
+        .skip(2)
+        .subscribe { println(it) }
+
+    Thread.sleep(100L)*/
 
 /*
     //take
@@ -767,14 +785,39 @@ fun main() {
     // protocol 3
     // protocol 4
     // protocol 5
-    subjectWithIntervalObservable()
-        .subscribe({
-            println("$it")
-        }, {
-            println("protocol error $it")
-        })
+    // subjectWithIntervalObservable()
+    //     .subscribe({
+    //         println("$it")
+    //     }, {
+    //         println("protocol error $it")
+    //     })
+    //
+    // Thread.sleep(7000L)
 
-    Thread.sleep(7000L)
+//    Observable.just(1, 2, 3)
+//        .doOnNext {
+//            println("First observable: $it")
+//        }
+//        .flatMap {
+//            Observable.just(it * 1, it * 2, it * 3)
+//        }
+//        .subscribe({
+//            println("Second observable: $it")
+//        }, {
+//
+//        })
+
+//    Observable.just(1, 2, 3)
+//        .concatWith(Observable.just(111, 222, 333))
+//        .doOnNext {
+//            println("Second observable: $it")
+//        }
+//        .subscribe({
+//        }, {
+//
+//        })
+//
+//    Thread.sleep(7000L)
 }
 
 // Subject 혹은 Observable이 주기적으로(예륻들면, Observable.interval 등) 데이터를 방출시키게 하는 방법.
@@ -802,8 +845,8 @@ fun subjectWithIntervalObservable(): Observable<String> {
 }
 
 // doOnSubscribe와 doFinally에서 dataSubject와 생명주기를 맞춰준다.
-fun getPostureStream(): Observable<Pair<Long,Long>> {
-    val dataSubject = PublishSubject.create<Pair<Long,Long>>()
+fun getPostureStream(): Observable<Pair<Long, Long>> {
+    val dataSubject = PublishSubject.create<Pair<Long, Long>>()
     var dataDisposable: Disposable? = null
     var timerDisposable: Disposable? = null
     return dataSubject
@@ -812,7 +855,7 @@ fun getPostureStream(): Observable<Pair<Long,Long>> {
                 .combineLatest<Long, Long, Pair<Long, Long>>(
                     Observable.interval(1L, TimeUnit.SECONDS),
                     Observable.interval(2L, TimeUnit.SECONDS),
-                     { t1, t2 ->
+                    { t1, t2 ->
                         t1 to t2
                     })
                 .doFinally {
