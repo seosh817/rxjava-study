@@ -224,7 +224,7 @@ fun main() {
     Observable.fromArray(*items)
         .subscribe { println(it) }*/
 
-
+/*
     var name = "seunghwan"
 
     val justObservable = Observable.just(name)
@@ -241,7 +241,7 @@ fun main() {
         println("fromCallableObservable name: $it")
     }
 
-    Thread.sleep(1000)
+    Thread.sleep(1000)*/
 
 /*    Observable.interval(1000, TimeUnit.MILLISECONDS)
         .subscribe { println(it) }
@@ -807,7 +807,23 @@ fun main() {
 //
 //        })
 
-//    Observable.just(1, 2, 3)
+    val observable1 = Observable.interval(0, 1000L, TimeUnit.MILLISECONDS).map {"Observable 1 -> $it"}
+        .take(3000L, TimeUnit.MILLISECONDS)
+    val observable2 = Observable.interval(0, 1000L, TimeUnit.MILLISECONDS).map {"Observable 2 -> $it"}
+
+    Observable.concat(observable1, observable2)
+        .doOnNext {
+            println("observable: $it")
+        }
+        .subscribe({
+
+        }, {
+
+        })
+
+    Thread.sleep(7000L)
+
+//    Observable.just(1)
 //        .concatWith(Observable.just(111, 222, 333))
 //        .doOnNext {
 //            println("Second observable: $it")
@@ -816,8 +832,20 @@ fun main() {
 //        }, {
 //
 //        })
+
+
+//    Observable.just(1, 2, 3, 4)
+//        .doOnSubscribe {
+//            throw IllegalStateException("abcd")
+//        }
+//        .subscribe({
 //
-//    Thread.sleep(7000L)
+//        }, {
+//            println("error: $it")
+//        })
+//
+//
+//    Thread.sleep(1000)
 }
 
 // Subject 혹은 Observable이 주기적으로(예륻들면, Observable.interval 등) 데이터를 방출시키게 하는 방법.
