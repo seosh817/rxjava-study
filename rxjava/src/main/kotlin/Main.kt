@@ -806,7 +806,7 @@ fun main() {
 //        }, {
 //
 //        })
-
+/*
     val observable1 = Observable.interval(0, 1000L, TimeUnit.MILLISECONDS).map {"Observable 1 -> $it"}
         .take(3000L, TimeUnit.MILLISECONDS)
     val observable2 = Observable.interval(0, 1000L, TimeUnit.MILLISECONDS).map {"Observable 2 -> $it"}
@@ -821,7 +821,7 @@ fun main() {
 
         })
 
-    Thread.sleep(7000L)
+    Thread.sleep(7000L)*/
 
 //    Observable.just(1)
 //        .concatWith(Observable.just(111, 222, 333))
@@ -846,6 +846,23 @@ fun main() {
 //
 //
 //    Thread.sleep(1000)
+
+    Observable.range(1, 12)
+        .groupBy { it % 3 }
+        .flatMapSingle { group ->
+            group
+                .toList()
+                .map {
+                    group.key to it
+                }
+        }
+        .subscribe({ (key, list) ->
+            println("observable: key: $key, list: $list")
+        }, {
+
+        })
+
+    Thread.sleep(1000)
 }
 
 // Subject 혹은 Observable이 주기적으로(예륻들면, Observable.interval 등) 데이터를 방출시키게 하는 방법.
